@@ -1,0 +1,17 @@
+Index: libsc-2.0/config/sc_package.m4
+===================================================================
+--- libsc-2.0.orig/config/sc_package.m4
++++ libsc-2.0/config/sc_package.m4
+@@ -30,7 +30,11 @@ $1_INSTALL=yes
+ $1_INC="$$1_DIR/include"
+ $1_LIB="$$1_DIR/lib"
+ $1_CFG="$$1_DIR/share/aclocal"
+-$1_ETC="$$1_DIR/etc"
++if test "$$1_DIR" != "/usr" ; then
++  $1_ETC="$$1_DIR/etc"
++else
++  $1_ETC=/etc
++fi
+ if $2 && test ! -d "$$1_INC" ; then
+   AC_MSG_ERROR([Specified installation path $$1_INC not found])
+ fi

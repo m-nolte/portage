@@ -1,0 +1,21 @@
+Index: libsc-2.0/config/sc_package.m4
+===================================================================
+--- libsc-2.0.orig/config/sc_package.m4
++++ libsc-2.0/config/sc_package.m4
+@@ -116,7 +116,15 @@ if test "x$$1_WITH_$3" != xno ; then
+   $1_$3_MK_USE=yes
+   $1_$3_MK_INCLUDE="include $$1_$3_ETC/Makefile.$4.mk"
+   $1_$3_CPPFLAGS="\$($3_CPPFLAGS)"
+-  $1_$3_LDADD="$$1_$3_DIR/lib/lib$4.la"
++  if test -f "$$1_$3_DIR/lib/lib$4.la" ; then
++    $1_$3_LDADD="$$1_$3_DIR/lib/lib$4.la"
++  elif test -f "$$1_$3_DIR/lib/lib$4.so" ; then
++    $1_$3_LDADD="$$1_$3_DIR/lib/lib$4.so"
++  elif test -f "$$1_$3_DIR/lib/lib$4.a" ; then
++    $1_$3_LDADD="$$1_$3_DIR/lib/lib$4.a"
++  else
++    AC_MSG_ERROR([Library $$1_$3_DIR/lib/lib$4.{la,so,a} not found])
++  fi
+ else
+   AC_MSG_NOTICE([Building with source of package $4])
+ 
