@@ -9,7 +9,7 @@ inherit distutils-r1
 
 DESCRIPTION="Domain specific language for the declaration of finite element discretizations of variational forms"
 HOMEPAGE="http://www.fenicsproject.org"
-SRC_URI="https://bitbucket.org/fenics-project/ufl/downloads/ufl-2016.2.0.tar.gz"
+SRC_URI="https://bitbucket.org/fenics-project/ufl/downloads/${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
