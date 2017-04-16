@@ -42,11 +42,11 @@ src_prepare() {
 src_configure() {
   CMAKE_BUILD_TYPE="Release"
   local mycmakeargs=(
-      -DDISABLE_HTTP_TWITCH="$(usex http)"
-	  -DENABLE_LIGHTFX="$(use lightfx)"
-	  -DDISABLE_NETWORK="$(usex multiplayer)"
-	  -DDISABLE_OPENGL="$(usex opengl)"
-	  -DDISABLE_TTF="$(usex ttf)"
+      -DDISABLE_HTTP_TWITCH="$(usex http OFF ON)"
+	  -DENABLE_LIGHTFX="$(usex lightfx ON OFF)"
+	  -DDISABLE_NETWORK="$(usex multiplayer OFF ON)"
+	  -DDISABLE_OPENGL="$(usex opengl OFF ON)"
+	  -DDISABLE_TTF="$(usex ttf OFF ON)"
     )
   cmake-utils_src_configure
 }
