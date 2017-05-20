@@ -1,0 +1,26 @@
+From 7292aa2cedfe3674679302868fe683eedd212b36 Mon Sep 17 00:00:00 2001
+From: Martin Nolte <nolte@mathematik.uni-freiburg.de>
+Date: Mon, 12 Jun 2017 21:59:31 +0200
+Subject: [PATCH] [cmake] find Eigen3
+
+---
+ cmake/Dependencies.cmake | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index c65c5031..63361377 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -22,6 +22,9 @@ set_property(CACHE BLAS PROPERTY STRINGS "Eigen;ATLAS;OpenBLAS;MKL;vecLib")
+ message(STATUS "The BLAS backend of choice:" ${BLAS})
+ 
+ if(BLAS STREQUAL "Eigen")
++  find_package(Eigen3 REQUIRED)
++  add_definitions(${EIGEN3_DEFINITIONS})
++  include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
+   # Eigen is header-only and we do not have any dependent libraries
+   add_definitions(-DCAFFE2_USE_EIGEN_FOR_BLAS)
+ elseif(BLAS STREQUAL "ATLAS")
+-- 
+2.13.0
+
