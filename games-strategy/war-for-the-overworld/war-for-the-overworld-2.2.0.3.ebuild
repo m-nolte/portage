@@ -41,6 +41,7 @@ src_install() {
 
 	insinto "${dir}"
 	doins -r "game/."
+	fperms +x "${dir}/WFTOGame.x86_64"
 
 	newicon "support/icon.png" "${PN}.png"
 	make_wrapper ${PN} "./WFTOGame.x86_64" "${dir}"
