@@ -15,12 +15,31 @@ KEYWORDS="~amd64"
 RESTRICT="bindist fetch"
 
 DEPEND="app-arch/unzip"
-RDEPEND="sys-devel/gcc[cxx]
+RDEPEND="dev-libs/glib:2
+		 dev-libs/nspr
+		 dev-libs/nss
+		 gnome-base/gconf
+		 media-libs/alsa-lib
+		 media-libs/fontconfig
+		 media-libs/freetype
+		 sys-devel/gcc[cxx]
 		 sys-libs/glibc
+		 sys-libs/libcap
+		 sys-libs/libudev-compat
 		 virtual/opengl
+		 x11-libs/cairo
+		 x11-libs/gtk+:2
+		 x11-libs/pango
 	     x11-libs/libX11
+		 x11-libs/libXcomposite
 		 x11-libs/libXcursor
-		 x11-libs/libXrandr"
+		 x11-libs/libXdamage
+		 x11-libs/libXext
+		 x11-libs/libXfixes
+		 x11-libs/libXi
+		 x11-libs/libXrandr
+		 x11-libs/libXrender
+		 x11-libs/libXtst"
 
 QA_PREBUILT="/opt/${PN}/WFTOGame.x86_64"
 
@@ -42,6 +61,7 @@ src_install() {
 	insinto "${dir}"
 	doins -r "game/."
 	fperms +x "${dir}/WFTOGame.x86_64"
+	fperms +x "${dir}/WFTOGame_Data/CoherentUI_Host/linux/CoherentUI_Host.bin"
 
 	newicon "support/icon.png" "${PN}.png"
 	make_wrapper ${PN} "./WFTOGame.x86_64" "${dir}"
