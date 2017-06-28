@@ -59,10 +59,14 @@ src_unpack() {
 src_install() {
 	local dir="/opt/${PN}"
 
+	mv game/WFTOGame_Data/CoherentUI_Host/linux/CoherentUI_Host.bin game/WFTOGame_Data/CoherentUI_Host/linux/CoherentUI_Host
+	rm game/WFTOGame_Data/CoherentUI_Host/linux/*.meta
+	rm game/WFTOGame_Data/GameData/Maps/*.meta
+
 	insinto "${dir}"
 	doins -r "game/."
 	fperms +x "${dir}/WFTOGame.x86_64"
-	fperms +x "${dir}/WFTOGame_Data/CoherentUI_Host/linux/CoherentUI_Host.bin"
+	fperms +x "${dir}/WFTOGame_Data/CoherentUI_Host/linux/CoherentUI_Host"
 
 	newicon "support/icon.png" "${PN}.png"
 	make_wrapper ${PN} "./WFTOGame.x86_64" "${dir}"
