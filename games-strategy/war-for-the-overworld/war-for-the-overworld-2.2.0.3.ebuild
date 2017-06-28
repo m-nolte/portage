@@ -28,6 +28,7 @@ RDEPEND="dev-libs/glib:2
 		 sys-libs/libudev-compat
 		 virtual/opengl
 		 x11-libs/cairo
+		 x11-libs/gdk-pixbuf
 		 x11-libs/gtk+:2
 		 x11-libs/pango
 	     x11-libs/libX11
