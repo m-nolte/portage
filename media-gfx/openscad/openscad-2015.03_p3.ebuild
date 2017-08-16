@@ -48,6 +48,8 @@ DEPEND="
 	emacs? ( virtual/emacs )"
 RDEPEND="${DEPEND}"
 
+S=${WORKDIR}/openscad-2015.03-3
+
 src_prepare() {
 	#Use our CFLAGS (specifically don't force x86)
 	sed -i "s/QMAKE_CXXFLAGS_RELEASE = .*//g" ${PN}.pro  || die
