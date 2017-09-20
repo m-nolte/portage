@@ -41,6 +41,7 @@ pkg_setup() {
 
 src_prepare() {
   epatch ${FILESDIR}/cmake-find-Eigen3.patch
+  epatch ${FILESDIR}/cmake-use-gnuinstalldirs.patch
 
   default
 }

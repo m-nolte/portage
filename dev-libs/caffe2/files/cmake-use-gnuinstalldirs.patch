@@ -1,0 +1,66 @@
+From 73900c75d3f3e88d213e05a676d3578d3cace4b7 Mon Sep 17 00:00:00 2001
+From: Martin Nolte <nolte@mathematik.uni-freiburg.de>
+Date: Wed, 20 Sep 2017 16:22:29 +0200
+Subject: [PATCH] [cmake] use GNUInstallDirs
+
+---
+ CMakeLists.txt        | 2 ++
+ caffe2/CMakeLists.txt | 8 ++++----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7f031ea5..9a134b7b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,6 +51,8 @@ option(USE_OPENMP "Use OpenMP for parallel code" ON)
+ option(BUILD_PYTHON "Build Python binaries" ON)
+ option(BUILD_BINARY "Build C++ binaries" ON)
+ 
++include(GNUInstallDirs)
++
+ # External projects
+ include(ExternalProject)
+ 
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index a4aed7b7..236a8b87 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -78,7 +78,7 @@ set(Caffe2_MAIN_LIBS_ORDER ${Caffe2_MAIN_LIBS})
+ # Compile exposed libraries.
+ add_library(Caffe2_CPU ${Caffe2_CPU_SRCS} $<TARGET_OBJECTS:Caffe_PROTO> $<TARGET_OBJECTS:Caffe2_PROTO>)
+ target_link_libraries(Caffe2_CPU ${Caffe2_DEPENDENCY_LIBS})
+-install(TARGETS Caffe2_CPU DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++install(TARGETS Caffe2_CPU DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ list(APPEND Caffe2_MAIN_LIBS_ORDER Caffe2_CPU)
+ if (BUILD_SHARED_LIBS)
+   list(APPEND Caffe2_MAIN_LIBS Caffe2_CPU)
+@@ -128,7 +128,7 @@ if(USE_CUDA)
+   if (Caffe2_EXTERNAL_DEPENDENCIES)
+     add_dependencies(Caffe2_GPU ${Caffe2_EXTERNAL_DEPENDENCIES})
+   endif()
+-  install(TARGETS Caffe2_GPU DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
++  install(TARGETS Caffe2_GPU DESTINATION ${CMAKE_INSTALL_LIBDIR})
+   link_directories(${CMAKE_INSTALL_PREFIX}/lib)
+   add_dependencies(Caffe2_GPU Caffe2_PROTO)
+ endif()
+@@ -178,7 +178,7 @@ if (BUILD_PYTHON)
+   if (APPLE)
+     add_custom_command(
+         TARGET caffe2_pybind11_state POST_BUILD
+-        COMMAND install_name_tool -add_rpath ${CMAKE_INSTALL_PREFIX}/lib
++        COMMAND install_name_tool -add_rpath ${CMAKE_INSTALL_LIBDIR}
+                 $<TARGET_FILE:caffe2_pybind11_state>)
+   endif()
+   install(
+@@ -203,7 +203,7 @@ if (BUILD_PYTHON)
+     if (APPLE)
+       add_custom_command(
+           TARGET caffe2_pybind11_state_gpu POST_BUILD
+-          COMMAND install_name_tool -add_rpath ${CMAKE_INSTALL_PREFIX}/lib
++          COMMAND install_name_tool -add_rpath ${CMAKE_INSTALL_LIBDIR}
+                   $<TARGET_FILE:caffe2_pybind11_state_gpu>)
+     endif()
+     install(
+-- 
+2.13.5
+
