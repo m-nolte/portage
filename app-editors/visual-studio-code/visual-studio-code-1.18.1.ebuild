@@ -34,7 +34,7 @@ RDEPEND="
 	x11-libs/libXScrnSaver
 "
 
-ARCH=$(getconf LONG_BIT)
+ARCH=$(/usr/bin/getconf LONG_BIT)
 
 [[ ${ARCH} == "64" ]] && S="${WORKDIR}/VSCode-linux-x64" || S="${WORKDIR}/VSCode-linux-ia32"
 
