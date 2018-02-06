@@ -7,7 +7,7 @@ inherit cmake-utils
 
 DESCRIPTION="DUNE, the Distributed and Unified Numerics Environment is a modular toolbox for solving partial differential equations with grid-based methods."
 HOMEPAGE="https://dune-project.org"
-SRC_URI="https://gitlab.dune-project.org/extensions/${PN}/repository/archive.tar.gz?ref=3a8bcb710d5865ef186a86e01ab9ce59934bb7fd -> ${P}.tar.gz"
+SRC_URI="https://gitlab.dune-project.org/extensions/${PN}/repository/archive.tar.gz?ref=v2.6.0rc1 -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -16,9 +16,9 @@ IUSE="alberta doc gmp metis mpi parmetis ug vc zlib"
 
 DEPEND="dev-util/cmake
 		dev-util/pkgconfig
-		=sci-mathematics/dune-common-2.5*[gmp=,mpi=,vc=]
-		=sci-mathematics/dune-geometry-2.5*[gmp=,mpi=,vc=]
-		=sci-mathematics/dune-grid-2.5*[alberta=,gmp=,metis=,mpi=,parmetis=,ug=,vc=]
+		=sci-mathematics/dune-common-2.6*[gmp=,mpi=,vc=]
+		=sci-mathematics/dune-geometry-2.6*[gmp=,mpi=,vc=]
+		=sci-mathematics/dune-grid-2.6*[alberta=,gmp=,metis=,mpi=,parmetis=,ug=,vc=]
 		alberta? ( sci-mathematics/alberta )
 		doc? ( app-doc/doxygen
 			   dev-python/sphinx
@@ -29,7 +29,7 @@ DEPEND="dev-util/cmake
 		metis? ( sci-libs/metis )
 		mpi? ( virtual/mpi )
 		parmetis? ( sci-libs/parmetis )
-		ug? ( =sci-mathematics/dune-uggrid-2.5*[gmp=,mpi=,vc=] )
+		ug? ( =sci-mathematics/dune-uggrid-2.6*[gmp=,mpi=,vc=] )
         vc? ( dev-libs/vc )
 		zlib? ( sys-libs/zlib )"
 RDEPEND="${DEPEND}"
