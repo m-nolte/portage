@@ -43,7 +43,6 @@ src_configure() {
 	  -Ddune-common_DIR=/usr/lib/cmake/dune-common
 	  -Ddune-geometry_DIR=/usr/lib/cmake/dune-geometry
 	  -DBUILD_SHARED_LIBS=TRUE
-	  -DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS="TRUE"
 	  -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen="$(usex doc FALSE TRUE)"
 	  -DCMAKE_DISABLE_FIND_PACKAGE_LATEX="$(usex doc FALSE TRUE)"
 	  -DCMAKE_DISABLE_FIND_PACKAGE_Sphinx="$(usex doc FALSE TRUE)"
