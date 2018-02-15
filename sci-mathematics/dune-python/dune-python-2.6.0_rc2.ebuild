@@ -3,6 +3,8 @@
 
 EAPI=6
 
+CMAKE_MIN_VERSION=3.1
+
 PYTHON_COMPAT=( python2_7 python3_{4,5,6} )
 
 inherit cmake-utils python-single-r1
@@ -14,31 +16,18 @@ SRC_URI="https://gitlab.dune-project.org/staging/${PN}/repository/archive.tar.gz
 LICENSE="|| ( GPL-2-with-linking-exception LGPL-3+ )"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="alberta arpack doc gmp istl metis mpi parmetis superlu suitesparse ug vc"
+IUSE="alberta arpack doc gmp istl metis mpi parmetis suitesparse superlu ug vc"
 
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
-DEPEND=">=dev-util/cmake-3.1
-		dev-util/pkgconfig
-		=sci-mathematics/dune-common-2.6*[gmp=,mpi=,vc=]
-		=sci-mathematics/dune-geometry-2.6*[gmp=,mpi=,vc=]
-		=sci-mathematics/dune-grid-2.6*[alberta=,gmp=,metis=,mpi=,parmetis=,ug=,vc=]
-		alberta? ( sci-mathematics/alberta )
+DEPEND="=sci-mathematics/dune-grid-2.6*[alberta=,gmp=,metis=,mpi=,parmetis=,ug=,vc=]
 		doc? ( app-doc/doxygen
 			   dev-python/sphinx
                media-gfx/inkscape
 			   virtual/imagemagick-tools
                virtual/latex-base )
-		gmp? ( dev-libs/gmp )
-		istl? ( =sci-mathematics/dune-istl-2.6*[arpack=,gmp=,metis=,mpi=,parmetis=,superlu=,suitesparse=,vc=]
-			    arpack? ( sci-libs/arpack[mpi=] )
-				superlu? ( sci-libs/superlu )
-				suitesparse? ( sci-libs/suitesparse ) )
-		metis? ( sci-libs/metis )
-		mpi? ( virtual/mpi )
-		parmetis? ( sci-libs/parmetis )
-		ug? ( =sci-mathematics/dune-uggrid-2.6*[gmp=,mpi=,vc=] )
-        vc? ( dev-libs/vc )
+		istl? ( =sci-mathematics/dune-istl-2.6*[arpack=,gmp=,metis=,mpi=,parmetis=,superlu=,suitesparse=,vc=] )
+		!istl? ( !sci-mathematics/dune-istl )
 		${PYTHON_DEPS}"
 RDEPEND="${DEPEND}"
 
@@ -49,36 +38,58 @@ src_unpack() {
 
 src_configure() {
   CMAKE_BUILD_TYPE="Release"
+
+  # We have no CMake flags of our own, so no env.d file is needed
+
+  # CMake flags needed for dune-common
   local mycmakeargs=(
-	  -Ddune-common_DIR=/usr/lib/cmake/dune-common
-	  -Ddune-geometry_DIR=/usr/lib/cmake/dune-geometry
-	  -Ddune-grid_DIR=/usr/lib/cmake/dune-grid
-	  -DBUILD_SHARED_LIBS=TRUE
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen="$(usex doc FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_LATEX="$(usex doc FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Sphinx="$(usex doc FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Alberta="$(usex alberta FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_AmiraMesh="FALSE"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_GMP="$(usex gmp FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_METIS="$(usex metis FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_MPI="$(usex mpi FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_ParMETIS="$(usex parmetis FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Psurface="FALSE"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Vc="$(usex vc FALSE TRUE)"
-	)
+      -Ddune-common_DIR=/usr/lib/cmake/dune-common
+      -DBUILD_SHARED_LIBS=ON
+      $(cmake-utils_use_find_package gmp GMP)
+      $(cmake-utils_use_find_package mpi MPI)
+      $(cmake-utils_use_find_package vc Vc)
+    )
+
+  # CMake flags needed for dune-geometry
+  mycmakeargs+=(
+      -Ddune-geometry_DIR=/usr/lib/cmake/dune-geometry
+    )
+
+  # CMake flags for dune-uggrid
   if use ug ; then
-	local mycmakeargs+=(
-		-Ddune-uggrid_DIR=/usr/lib/cmake/dune-uggrid
-	  )
+    mycmakeargs+=(
+        -Ddune-uggrid_DIR=/usr/lib/cmake/dune-uggrid
+      )
   fi
+
+  # CMake flags needed for dune-grid
+  mycmakeargs+=(
+      -Ddune-geometry_DIR=/usr/lib/cmake/dune-grid
+	  $(cmake-utils_use_find_package alberta Alberta)
+      $(cmake-utils_use_find_package metis METIS)
+      $(cmake-utils_use_find_package parmetis ParMETIS)
+      -DCMAKE_DISABLE_FIND_PACKAGE_AmiraMesh=ON
+      -DCMAKE_DISABLE_FIND_PACKAGE_Psurface=ON
+    )
+
   if use istl ; then
-	local mycmakeargs+=(
+	mycmakeargs+=(
 		-Ddune-istl_DIR=/usr/lib/cmake/dune-istl
-		-DCMAKE_DISABLE_FIND_PACKAGE_ARPACKPP="$(usex arpack FALSE TRUE)"
-        -DCMAKE_DISABLE_FIND_PACKAGE_SuperLU="$(usex superlu FALSE TRUE)"
-        -DCMAKE_DISABLE_FIND_PACKAGE_SuiteSparse="$(usex suitesparse FALSE TRUE)"
+        $(cmake-utils_use_find_package arpack ARPACKPP)
+        $(cmake-utils_use_find_package metis METIS)
+        $(cmake-utils_use_find_package parmetis ParMETIS)
+        $(cmake-utils_use_find_package superlu SuperLU)
+        $(cmake-utils_use_find_package suitesparse SuiteSparse)
 	  )
   fi
+
+  # CMake flags for documentation
+  mycmakeargs+=(
+      $(cmake-utils_use_find_package doc Doxygen)
+      $(cmake-utils_use_find_package doc LATEX)
+      $(cmake-utils_use_find_package doc Sphinx)
+    )
+
   cmake-utils_src_configure
 }
 

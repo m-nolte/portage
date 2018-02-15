@@ -3,6 +3,8 @@
 
 EAPI=6
 
+CMAKE_MIN_VERSION=3.1
+
 inherit cmake-utils
 
 DESCRIPTION="DUNE, the Distributed and Unified Numerics Environment is a modular toolbox for solving partial differential equations with grid-based methods."
@@ -14,8 +16,7 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="doc gmp mpi vc"
 
-DEPEND=">=dev-util/cmake-3.1
-		dev-util/pkgconfig
+DEPEND="dev-util/pkgconfig
 		doc? ( app-doc/doxygen
 			   dev-python/sphinx
                media-gfx/inkscape
@@ -33,15 +34,29 @@ src_unpack() {
 
 src_configure() {
   CMAKE_BUILD_TYPE="Release"
+
+  # CMake flags that need to go into DUNE_CMAKE_FLAGS
   local mycmakeargs=(
-	  -DBUILD_SHARED_LIBS=TRUE
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen="$(usex doc FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_LATEX="$(usex doc FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Sphinx="$(usex doc FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_GMP="$(usex gmp FALSE TRUE)"
-      -DCMAKE_DISABLE_FIND_PACKAGE_MPI="$(usex mpi FALSE TRUE)"
-	  -DCMAKE_DISABLE_FIND_PACKAGE_Vc="$(usex vc FALSE TRUE)"
+	  -DBUILD_SHARED_LIBS=ON
+	  $(cmake-utils_use_find_package gmp GMP)
+	  $(cmake-utils_use_find_package mpi MPI)
+	  $(cmake-utils_use_find_package vc Vc)
     )
+
+  # generate env.d file
+  ENVFILE=${WORKDIR}/98${PN}
+  echo 'SPACE_SEPARATED=DUNE_CMAKE_FLAGS' > ${ENVFILE}
+  printf 'DUNE_CMAKE_FLAGS="' >> ${ENVFILE}
+  printf ' %s' "${mycmakeargs[@]}" >> ${ENVFILE}
+  printf '"\n' >> ${ENVFILE}
+
+  # CMake flags for documentation
+  mycmakeargs+=(
+	  $(cmake-utils_use_find_package doc Doxygen)
+	  $(cmake-utils_use_find_package doc LATEX)
+	  $(cmake-utils_use_find_package doc Sphinx)
+    )
+
   cmake-utils_src_configure
 }
 
@@ -51,4 +66,5 @@ src_compile() {
 
 src_install() {
   cmake-utils_src_install
+  doenvd ${WORKDIR}/98${PN}
 }
