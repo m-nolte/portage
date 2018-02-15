@@ -46,6 +46,8 @@ src_configure() {
   # generate env.d file
   ENVFILE=${WORKDIR}/98${PN}
   echo 'SPACE_SEPARATED=DUNE_CMAKE_FLAGS' > ${ENVFILE}
+  echo 'COLON_SEPARATED=DUNE_CONTROL_PATH' >> ${ENVFILE}
+  echo 'DUNE_CONTROL_PATH=/usr' >> ${ENVFILE}
   printf 'DUNE_CMAKE_FLAGS="' >> ${ENVFILE}
   printf ' %s' "${mycmakeargs[@]}" >> ${ENVFILE}
   printf '"\n' >> ${ENVFILE}
