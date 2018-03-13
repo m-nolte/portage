@@ -17,6 +17,11 @@ IUSE=""
 RDEPEND=""
 DEPEND=""
 
+src_prepare() {
+  epatch ${FILESDIR}/cmake-files-install-path.patch
+  cmake-utils_src_prepare
+}
+
 src_configure() {
   CMAKE_BUILD_TYPE="Release"
   local mycmakeargs=(
