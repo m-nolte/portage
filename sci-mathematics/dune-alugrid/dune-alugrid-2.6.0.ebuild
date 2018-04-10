@@ -11,7 +11,7 @@ inherit cmake-utils python-single-r1
 
 DESCRIPTION="DUNE, the Distributed and Unified Numerics Environment is a modular toolbox for solving partial differential equations with grid-based methods."
 HOMEPAGE="https://dune-project.org"
-SRC_URI="https://gitlab.dune-project.org/extensions/${PN}/repository/archive.tar.gz?ref=v2.6.0 -> ${P}.tar.gz"
+SRC_URI="https://gitlab.dune-project.org/extensions/${PN}/repository/archive.tar.gz?ref=${PV} -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
