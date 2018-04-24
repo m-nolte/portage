@@ -104,4 +104,7 @@ src_compile() {
 
 src_install() {
   cmake-utils_src_install
+  pushd ${BUILD_DIR}/python || die
+  ${PYTHON} setup.py install --root ${D} --prefix ${EPREFIX}/usr || die "Installing Python package failed."
+  popd || die
 }
