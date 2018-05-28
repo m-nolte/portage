@@ -1,0 +1,12 @@
+diff --git a/libsparse/sparse_read.cpp b/libsparse/sparse_read.cpp
+index bd668735a..91d551c14 100644
+--- a/libsparse/sparse_read.cpp
++++ b/libsparse/sparse_read.cpp
+@@ -25,6 +25,7 @@
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <string>
+ #include <unistd.h>
+ 

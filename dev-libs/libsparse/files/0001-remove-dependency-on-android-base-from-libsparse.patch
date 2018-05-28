@@ -1,0 +1,82 @@
+From c7e9f3c86e1ca6329a2feb125eb99028653ab986 Mon Sep 17 00:00:00 2001
+From: Martin Nolte <nolte.mrtn@gmail.com>
+Date: Mon, 28 May 2018 14:20:50 +0200
+Subject: [PATCH 1/2] remove dependency on android-base from libsparse
+
+---
+ libsparse/sparse_read.cpp | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
+
+diff --git a/libsparse/sparse_read.cpp b/libsparse/sparse_read.cpp
+index 437963527..1ad6cf9e6 100644
+--- a/libsparse/sparse_read.cpp
++++ b/libsparse/sparse_read.cpp
+@@ -20,6 +20,7 @@
+ #include <algorithm>
+ #include <inttypes.h>
+ #include <fcntl.h>
++#include <memory>
+ #include <stdarg.h>
+ #include <stdint.h>
+ #include <stdio.h>
+@@ -30,7 +31,6 @@
+ 
+ #include <sparse/sparse.h>
+ 
+-#include "android-base/stringprintf.h"
+ #include "defs.h"
+ #include "output_file.h"
+ #include "sparse_crc32.h"
+@@ -50,12 +50,39 @@
+ static constexpr int64_t COPY_BUF_SIZE = 1024 * 1024;
+ static char *copybuf;
+ 
++
++static std::string string_printf(const char* fmt, ...)
++{
++  char space[1024];
++  va_list argp, backup_argp;
++  std::string result;
++
++  va_start(argp, fmt);
++
++  va_copy(backup_argp, argp);
++  int length = vsnprintf(space, sizeof(space), fmt, backup_argp);
++  va_end(backup_argp);
++
++  if (length >= static_cast<int>(sizeof(space))) {
++    std::unique_ptr<char[]> buf(new char[length+1]);
++    va_copy(backup_argp, argp);
++    length = vsnprintf(buf.get(), length+1, fmt, backup_argp);
++    va_end(backup_argp);
++    if (length >= 0) result.append(buf.get());
++  }
++  else if (length >= 0) result.append(space);
++
++  va_end(argp);
++  return result;
++}
++
++
+ static std::string ErrorString(int err)
+ {
+ 	if (err == -EOVERFLOW) return "EOF while reading file";
+ 	if (err == -EINVAL) return "Invalid sparse file format";
+ 	if (err == -ENOMEM) return "Failed allocation while reading file";
+-	return android::base::StringPrintf("Unknown error %d", err);
++	return string_printf("Unknown error %d", err);
+ }
+ 
+ static void verbose_error(bool verbose, int err, const char *fmt, ...)
+@@ -67,7 +94,7 @@ static void verbose_error(bool verbose, int err, const char *fmt, ...)
+ 		msg += " at ";
+ 		va_list argp;
+ 		va_start(argp, fmt);
+-		android::base::StringAppendV(&msg, fmt, argp);
++		msg += string_printf(fmt, argp);
+ 		va_end(argp);
+ 	}
+ 	sparse_print_verbose("%s\n", msg.c_str());
+-- 
+2.16.1
+
