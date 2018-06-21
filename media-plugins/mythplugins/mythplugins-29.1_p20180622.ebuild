@@ -6,11 +6,15 @@ EAPI=6
 PYTHON_COMPAT=( python2_7 )
 PYTHON_REQ_USE="xml"
 
+BACKPORTS="adc810a8bec396247349bde04eff78e399c5550e"
+MY_P=${P%_p*}
+MY_PV=${PV%_p*}
+
 inherit eutils python-single-r1 vcs-snapshot
 
 DESCRIPTION="Official MythTV plugins"
 HOMEPAGE="http://www.mythtv.org"
-SRC_URI="https://github.com/MythTV/mythtv/archive/v${PV}.tar.gz -> mythtv-${PV}.tar.gz"
+SRC_URI="https://github.com/MythTV/mythtv/archive/${BACKPORTS}.tar.gz -> mythtv-${PV}.tar.gz"
 
 LICENSE="GPL-2"
 KEYWORDS="~amd64 ~x86"
@@ -24,10 +28,10 @@ IUSE="${MYTHPLUGINS} alsa cdda cdr exif fftw +hls ieee1394 libass raw +theora +v
 DEPEND="
 	dev-libs/glib:2
 	dev-libs/openssl:=
-	dev-qt/qtcore:5
-	dev-qt/qtgui:5
-	dev-qt/qtopengl:5
-	dev-qt/qtsql:5
+	dev-qt/qtcore:5=
+	dev-qt/qtgui:5=
+	dev-qt/qtopengl:5=
+	dev-qt/qtsql:5=
 	media-libs/freetype:2
 	media-libs/libpng:0=
 	~media-tv/mythtv-${PV}:=[alsa=,hls=,ieee1394=,libass=,python,theora=,vorbis=,xml=,xvid=]
@@ -43,8 +47,9 @@ DEPEND="
 	alsa? ( >=media-libs/alsa-lib-1.0.24 )
 	fftw? ( sci-libs/fftw:3.0= )
 	hls? (
-		media-libs/libvpx:=
+		<media-libs/libvpx-1.7.0:=
 		>=media-libs/x264-0.0.20111220:=
+		>=media-sound/lame-3.93.1
 	)
 	ieee1394? (
 		>=media-libs/libiec61883-1.0.0
@@ -60,7 +65,7 @@ DEPEND="
 		media-video/transcode
 		virtual/cdrtools
 	)
-	mythbrowser? ( dev-qt/qtwebkit:5 )
+	mythbrowser? ( dev-qt/qtwebkit:5= )
 	mythgallery? (
 		media-libs/tiff:0
 		virtual/opengl

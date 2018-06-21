@@ -1,17 +1,21 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=6
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit flag-o-matic multilib eutils python-single-r1 qmake-utils user systemd vcs-snapshot
+BACKPORTS="adc810a8bec396247349bde04eff78e399c5550e"
+MY_P=${P%_p*}
+MY_PV=${PV%_p*}
 
-MYTHTV_BRANCH="fixes/0.28"
+inherit flag-o-matic python-single-r1 qmake-utils user readme.gentoo-r1 systemd vcs-snapshot
+
+MYTHTV_BRANCH="fixes/29"
 
 DESCRIPTION="Homebrew PVR project"
-HOMEPAGE="http://www.mythtv.org"
-SRC_URI="https://github.com/MythTV/mythtv/archive/v${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://www.mythtv.org"
+SRC_URI="https://github.com/MythTV/mythtv/archive/${BACKPORTS}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 KEYWORDS="~amd64 ~x86"
@@ -19,8 +23,8 @@ SLOT="0/${PV}"
 
 IUSE_INPUT_DEVICES="input_devices_joystick"
 IUSE="alsa altivec autostart bluray cec crystalhd debug dvb dvd egl fftw +hls \
-ieee1394 jack lcd libass lirc +mythlogserver perl pulseaudio python systemd +theora \
-vaapi vdpau +vorbis +wrapper +xml xmltv +xvid zeroconf ${IUSE_INPUT_DEVICES}"
+	ieee1394 jack lcd libass lirc +mythlogserver perl pulseaudio python systemd +theora \
+	vaapi vdpau +vorbis +wrapper +xml xmltv +xvid zeroconf ${IUSE_INPUT_DEVICES}"
 
 REQUIRED_USE="
 	bluray? ( xml )
@@ -29,18 +33,20 @@ REQUIRED_USE="
 
 COMMON="
 	dev-libs/glib:2
-	dev-qt/qtcore:5
-	dev-qt/qtdbus:5
-	dev-qt/qtgui:5
-	dev-qt/qtnetwork:5
-	dev-qt/qtscript:5
-	dev-qt/qtsql:5[mysql]
-	dev-qt/qtopengl:5
-	dev-qt/qtwebkit:5
-	dev-qt/qtwidgets:5
-	dev-qt/qtxml:5
+	dev-qt/qtcore:5=
+	dev-qt/qtdbus:5=
+	dev-qt/qtgui:5=
+	dev-qt/qtnetwork:5=
+	dev-qt/qtscript:5=
+	dev-qt/qtsql:5=[mysql]
+	dev-qt/qtopengl:5=
+	dev-qt/qtwebkit:5=
+	dev-qt/qtwidgets:5=
+	dev-qt/qtxml:5=
+	media-gfx/exiv2:=
 	media-libs/freetype:2
 	media-libs/taglib
+	>=media-sound/lame-3.93.1
 	sys-libs/zlib
 	virtual/mysql
 	virtual/opengl
@@ -58,10 +64,7 @@ COMMON="
 		sys-fs/udisks:2
 	)
 	cec? ( dev-libs/libcec )
-	dvb? (
-		media-libs/libdvb
-		virtual/linuxtv-dvb-headers
-	)
+	dvb? ( virtual/linuxtv-dvb-headers )
 	dvd? (
 		dev-libs/libcdio:=
 		sys-fs/udisks:2
@@ -69,7 +72,7 @@ COMMON="
 	egl? ( media-libs/mesa[egl] )
 	fftw? ( sci-libs/fftw:3.0= )
 	hls? (
-		media-libs/libvpx:=
+		<media-libs/libvpx-1.7.0:=
 		>=media-libs/x264-0.0.20111220:=
 	)
 	ieee1394? (
@@ -95,10 +98,12 @@ COMMON="
 		dev-python/lxml
 		dev-python/mysql-python
 		dev-python/urlgrabber
+		dev-python/future
+		dev-python/requests-cache
 	)
 	systemd? ( sys-apps/systemd:= )
 	theora? ( media-libs/libtheora media-libs/libogg )
-	vaapi? ( x11-libs/libva[opengl] )
+	vaapi? ( x11-libs/libva:=[opengl] )
 	vdpau? ( x11-libs/libvdpau )
 	vorbis? ( >=media-libs/libvorbis-1.0 media-libs/libogg )
 	xml? ( >=dev-libs/libxml2-2.6.0 )
@@ -127,11 +132,28 @@ RDEPEND="${COMMON}
 
 DEPEND="${COMMON}
 	dev-lang/yasm
-	x11-proto/xf86vidmodeproto
-	x11-proto/xineramaproto
+	x11-base/xorg-proto
 "
 
 S="${WORKDIR}/${P}/mythtv"
+
+
+DISABLE_AUTOFORMATTING="yes"
+DOC_CONTENTS="
+To have this machine operate as recording host for MythTV,
+mythbackend must be running. Run the following:
+rc-update add mythbackend default
+
+Your recordings folder must be owned 'mythtv'. e.g.
+chown -R mythtv /var/lib/mythtv
+
+Want mythfrontend to start automatically?
+Set USE=autostart. Details can be found at:
+https://dev.gentoo.org/~cardoe/mythtv/autostart.html
+
+Note that the systemd unit now restarts by default and logs
+to journald via the console at the notice verbosity.
+"
 
 MYTHTV_GROUPS="video,audio,tty,uucp"
 
@@ -142,19 +164,21 @@ pkg_setup() {
 }
 
 src_prepare() {
+	default
+
 	# Perl bits need to go into vender_perl and not site_perl
 	sed -e "s:pure_install:pure_install INSTALLDIRS=vendor:" \
 		-i "${S}"/bindings/perl/Makefile
 
 	# Fix up the version info since we are using the fixes/${PV} branch
-	echo "SOURCE_VERSION=\"v${PV}\"" > "${S}"/VERSION
+	echo "SOURCE_VERSION=\"v${MY_PV}\"" > "${S}"/VERSION
 	echo "BRANCH=\"${MYTHTV_BRANCH}\"" >> "${S}"/VERSION
-	echo "SOURCE_VERSION=\"${PV}\"" > "${S}"/EXPORTED_VERSION
+	echo "SOURCE_VERSION=\"${BACKPORTS}\"" > "${S}"/EXPORTED_VERSION
 	echo "BRANCH=\"${MYTHTV_BRANCH}\"" >> "${S}"/EXPORTED_VERSION
 
 	echo "setting.extra -= -ldconfig" >> "${S}"/programs/mythfrontend/mythfrontend.pro
 
-	epatch_user
+	eapply_user
 }
 
 src_configure() {
@@ -244,6 +268,7 @@ src_configure() {
 	has ccache ${FEATURES} || myconf="${myconf} --disable-ccache"
 
 	myconf="${myconf} $(use_enable systemd systemd_notify)"
+	myconf="${myconf} $(use_enable systemd systemd_journal)"
 	use systemd || myconf="${myconf} $(use_enable mythlogserver)"
 
 	chmod +x ./external/FFmpeg/version.sh
@@ -261,8 +286,9 @@ src_configure() {
 }
 
 src_install() {
-	emake INSTALL_ROOT="${D}" install || die "install failed"
+	emake STRIP="true" INSTALL_ROOT="${D}" install || die "install failed"
 	dodoc AUTHORS UPGRADING README
+	readme.gentoo_create_doc
 
 	insinto /usr/share/mythtv/database
 	doins database/*
@@ -327,19 +353,7 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	elog "To have this machine operate as recording host for MythTV, "
-	elog "mythbackend must be running. Run the following:"
-	elog "rc-update add mythbackend default"
-	elog
-	elog "Your recordings folder must be owned 'mythtv'. e.g."
-	elog "chown -R mythtv /var/lib/mythtv"
-
-	elog "Want mythfrontend to start automatically?"
-	elog "Set USE=autostart. Details can be found at:"
-	elog "https://dev.gentoo.org/~cardoe/mythtv/autostart.html"
-	elog
-	elog "Note that the systemd unit now restarts by default and logs"
-	elog "to journald via the console at the notice verbosity."
+	readme.gentoo_print_elog
 }
 
 pkg_info() {
