@@ -31,6 +31,10 @@ DEPEND="=sci-mathematics/dune-grid-2.6*[alberta=,gmp=,metis=,mpi=,parmetis=,ug=,
 		${PYTHON_DEPS}"
 RDEPEND="${DEPEND}"
 
+PATCHES=(
+  "${FILESDIR}/bugfix-polygons.patch"
+)
+
 src_unpack() {
   unpack ${A}
   mv ${WORKDIR}/${PN}-* ${WORKDIR}/${P}
