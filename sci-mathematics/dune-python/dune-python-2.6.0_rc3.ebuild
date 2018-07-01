@@ -33,6 +33,7 @@ RDEPEND="${DEPEND}"
 
 PATCHES=(
   "${FILESDIR}/bugfix-polygons.patch"
+  "${FILESDIR}/extend-gridfactory.patch"
 )
 
 src_unpack() {
