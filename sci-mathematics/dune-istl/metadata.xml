@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <use>
+	<flag name="arpack">Add support for sci-libs/arpack</flag>
+	<flag name="metis">Add support for METIS graph partitioning library</flag>
+	<flag name="parmetis">Add support ParMETIS graph partitioning library</flag>
+	<flag name="suitesparse">Add support SuiteSparse solver library</flag>
+	<flag name="superlu">Add support SuperLU direct solver library</flag>
+	<flag name="vc">Add support for SIMD instructions using dev-libs/vc</flag>
+  </use>
+</pkgmetadata>
