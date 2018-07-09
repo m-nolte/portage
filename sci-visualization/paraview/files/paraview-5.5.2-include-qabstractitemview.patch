@@ -1,0 +1,12 @@
+Index: ParaView-v5.5.2/Qt/Python/pqPythonShell.cxx
+===================================================================
+--- ParaView-v5.5.2.orig/Qt/Python/pqPythonShell.cxx
++++ ParaView-v5.5.2/Qt/Python/pqPythonShell.cxx
+@@ -52,6 +52,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBI
+ #include "vtkStringOutputWindow.h"
+ #include "vtkWeakPointer.h"
+ 
++#include <QAbstractItemView>
+ #include <QApplication>
+ #include <QCursor>
+ #include <QFile>
