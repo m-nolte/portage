@@ -78,4 +78,4 @@ Icon=application-x-tml18
 TryExec=/usr/bin/textmaker18
 StartupWMClass=tm
 Exec=/usr/bin/textmaker18 %F
-Path=/usr/share/freeoffice
+Path=/usr/share/freeoffice2018

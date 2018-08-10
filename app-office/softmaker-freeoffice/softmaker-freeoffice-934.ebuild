@@ -57,7 +57,7 @@ pkg_nofetch() {
 }
 
 src_install() {
-  APPDIR=/usr/share/freeoffice
+  APPDIR=/usr/share/freeoffice2018
 
   # extract application
   mkdir -p ${D}/${APPDIR}

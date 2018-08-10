@@ -79,4 +79,4 @@ Icon=application-x-pml18
 TryExec=/usr/bin/planmaker18
 StartupWMClass=pm
 Exec=/usr/bin/planmaker18 %F
-Path=/usr/share/freeoffice
+Path=/usr/share/freeoffice2018
