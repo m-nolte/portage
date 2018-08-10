@@ -18,7 +18,7 @@ KEYWORDS="amd64 arm ~arm64 ~mips ~ppc ppc64 x86 ~amd64-linux ~x86-linux ~ppc-mac
 IUSE="doc test"
 
 RDEPEND="
-	>=net-libs/zeromq-4.1.2:=
+	>=net-libs/zeromq-4.1.2:=[drafts]
 	dev-python/py[${PYTHON_USEDEP}]
 	dev-python/cffi:=[${PYTHON_USEDEP}]
 	$(python_gen_cond_dep 'dev-python/gevent[${PYTHON_USEDEP}]' python2_7)
