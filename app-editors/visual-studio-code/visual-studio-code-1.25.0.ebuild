@@ -17,7 +17,7 @@ RESTRICT="mirror strip"
 LICENSE="EULA MIT"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
-IUSE=""
+IUSE="libsecret"
 
 DEPEND="
 	>=media-libs/libpng-1.2.46
@@ -32,13 +32,15 @@ RDEPEND="
 	>=net-print/cups-2.0.0
 	x11-libs/libnotify
 	x11-libs/libXScrnSaver
+	libsecret? ( app-crypt/libsecret[crypt] )
 "
 
-ARCH=$(/usr/bin/getconf LONG_BIT)
-
-[[ ${ARCH} == "64" ]] && S="${WORKDIR}/VSCode-linux-x64" || S="${WORKDIR}/VSCode-linux-ia32"
-
 QA_PRESTRIPPED="opt/${PN}/code"
+QA_PREBUILT="opt/${PN}/code"
+
+pkg_setup() {
+  use amd64 && S="${WORKDIR}/VSCode-linux-x64" || S="${WORKDIR}/VSCode-linux-ia32"
+}
 
 src_install(){
 	pax-mark m code
@@ -50,7 +52,7 @@ src_install(){
 	fperms +x "/opt/${PN}/code"
 	fperms +x "/opt/${PN}/bin/code"
 	fperms +x "/opt/${PN}/libnode.so"
-	fperms +x "/opt/${PN}/resources/app/node_modules/vscode-ripgrep/bin/rg"
+	fperms +x "/opt/${PN}/resources/app/node_modules.asar.unpacked/vscode-ripgrep/bin/rg"
 	insinto "/usr/share/licenses/${PN}"
 	newins "resources/app/LICENSE.txt" "LICENSE"
 }
