@@ -35,7 +35,7 @@ src_install() {
 	java-pkg_dojar poi.jar poi-ooxml.jar poi-ooxml-schemas.jar
 	java-pkg_dojar xml-apis.jar xmlbeans-2.3.0.jar
 
-	java-pkg_register-dependency log4j,xerces
+	java-pkg_register-dependency log4j,xerces-2
 
 	java-pkg_register-optional-dependency jdbc-informix,jdbc-mssqlserver,jdbc-mysql,jdbc-postgresql,jdts
 
