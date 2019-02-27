@@ -7,7 +7,7 @@ inherit desktop
 
 DESCRIPTION="Snap! Build Your Own Blocks is a visual, blocks based programming language inspired by Scratch."
 HOMEPAGE="http://snap.berkeley.edu"
-SRC_URI="https://github.com/jmoenig/Snap--Build-Your-Own-Blocks/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/jmoenig/Snap/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="AGPL-3"
 SLOT="0"
@@ -20,7 +20,7 @@ DEPEND="
 	${RDEPEND}
 "
 
-S=${WORKDIR}/Snap--Build-Your-Own-Blocks-${PV}
+S=${WORKDIR}/Snap-${PV}
 
 src_install() {
   declare SNAP_HOME=/opt/snap
