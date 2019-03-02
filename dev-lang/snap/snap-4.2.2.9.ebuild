@@ -1,7 +1,7 @@
 # Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 inherit desktop
 
@@ -23,29 +23,26 @@ DEPEND="
 S=${WORKDIR}/Snap-${PV}
 
 src_install() {
-  declare SNAP_HOME=/opt/snap
+	declare SNAP_HOME=/opt/snap
 
-  insinto ${SNAP_HOME}
-  doins ${S}/*.js
-  doins ${S}/click.wav
-  doins ${S}/favicon.ico
-  doins ${S}/snap.html
-  doins ${S}/snap_logo_sm.png
-  doins ${S}/tools.xml
-  doins -r ${S}/Backgrounds
-  doins -r ${S}/Costumes
-  doins -r ${S}/Examples
-  doins -r ${S}/Sounds
-  doins -r ${S}/help
-  doins -r ${S}/libraries
+	insinto ${SNAP_HOME}
+	doins ${S}/snap.html
+	doins -r ${S}/Backgrounds
+	doins -r ${S}/Costumes
+	doins -r ${S}/Examples
+	doins -r ${S}/Sounds
+	doins -r ${S}/help
+	doins -r ${S}/libraries
+	doins -r ${S}/locale
+	doins -r ${S}/src
 
-  convert "${S}/favicon.ico[0]" ${S}/snap-32.png
-  convert "${S}/favicon.ico[1]" ${S}/snap-24.png
-  convert "${S}/favicon.ico[2]" ${S}/snap-16.png
+	convert "${S}/src/favicon.ico[0]" ${S}/snap-32.png
+	convert "${S}/src/favicon.ico[1]" ${S}/snap-24.png
+	convert "${S}/src/favicon.ico[2]" ${S}/snap-16.png
 
-  for size in 16 24 32 ; do
-    newicon -s ${size} ${S}/snap-${size}.png Snap-BuildYourOwnBlocks.png
-  done
+	for size in 16 24 32 ; do
+		newicon -s ${size} ${S}/snap-${size}.png Snap-BuildYourOwnBlocks.png
+	done
 
-  make_desktop_entry "firefox ${SNAP_HOME}/snap.html" "Snap - Build Your Own Blocks" "Snap-BuildYourOwnBlocks" "Development"
+	make_desktop_entry "firefox ${SNAP_HOME}/snap.html" "Snap - Build Your Own Blocks" "Snap-BuildYourOwnBlocks" "Development"
 }
