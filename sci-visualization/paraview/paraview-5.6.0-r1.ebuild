@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -100,7 +100,6 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-4.0.1-xdmf-cstring.patch
 	"${FILESDIR}"/${PN}-5.3.0-fix_buildsystem.patch
 	"${FILESDIR}"/${PN}-5.5.0-allow_custom_build_type.patch
-	"${FILESDIR}"/${P}-qt-5.11.patch
 )
 
 pkg_setup() {
@@ -110,10 +109,11 @@ pkg_setup() {
 }
 
 src_prepare() {
-	cmake-utils_src_prepare
 
 	# Bug #661812
 	mkdir -p Plugins/StreamLinesRepresentation/doc || die
+
+	cmake-utils_src_prepare
 
 	# lib64 fixes
 	sed -i \
