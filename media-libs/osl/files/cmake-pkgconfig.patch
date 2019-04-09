@@ -1,0 +1,44 @@
+Index: OpenShadingLanguage-Release-1.10.4/src/cmake/modules/FindOpenEXR.cmake
+===================================================================
+--- OpenShadingLanguage-Release-1.10.4.orig/src/cmake/modules/FindOpenEXR.cmake
++++ OpenShadingLanguage-Release-1.10.4/src/cmake/modules/FindOpenEXR.cmake
+@@ -23,11 +23,9 @@ if (CMAKE_USE_PTHREADS_INIT)
+ endif ()
+ 
+ # Attempt to find OpenEXR with pkgconfig
+-find_package(PkgConfig)
+-if (PKG_CONFIG_FOUND)
+-    pkg_check_modules(_ILMBASE QUIET IlmBase>=2.0.0)
+-    pkg_check_modules(_OPENEXR QUIET OpenEXR>=2.0.0)
+-endif (PKG_CONFIG_FOUND)
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(_ILMBASE QUIET IlmBase>=2.0.0)
++pkg_check_modules(_OPENEXR QUIET OpenEXR>=2.0.0)
+ 
+ # List of likely places to find the headers -- note priority override of
+ # ${OPENEXR_ROOT_DIR}/include.
+@@ -59,22 +57,8 @@ find_path (OPENEXR_INCLUDE_PATH OpenEXR/
+                  ${GENERIC_INCLUDE_PATHS} NO_DEFAULT_PATH)
+ find_path (OPENEXR_INCLUDE_PATH OpenEXR/OpenEXRConfig.h)
+ 
+-# Try to figure out version number
+-if (EXISTS "${OPENEXR_INCLUDE_PATH}/OpenEXR/ImfMultiPartInputFile.h")
+-    # Must be at least 2.0
+-    file(STRINGS "${OPENEXR_INCLUDE_PATH}/OpenEXR/OpenEXRConfig.h" TMP REGEX "^#define OPENEXR_VERSION_STRING .*$")
+-    string (REGEX MATCHALL "[0-9]+[.0-9]+" OPENEXR_VERSION ${TMP})
+-    file(STRINGS "${OPENEXR_INCLUDE_PATH}/OpenEXR/OpenEXRConfig.h" TMP REGEX "^#define OPENEXR_VERSION_MAJOR .*$")
+-    string (REGEX MATCHALL "[0-9]+" OPENEXR_VERSION_MAJOR ${TMP})
+-    file(STRINGS "${OPENEXR_INCLUDE_PATH}/OpenEXR/OpenEXRConfig.h" TMP REGEX "^#define OPENEXR_VERSION_MINOR .*$")
+-    string (REGEX MATCHALL "[0-9]+" OPENEXR_VERSION_MINOR ${TMP})
+-else ()
+-    # Assume an old one, predates 2.x that had versions
+-    set (OPENEXR_VERSION 1.6.1)
+-    set (OPENEXR_MAJOR 1)
+-    set (OPENEXR_MINOR 6)
+-endif ()
+-
++# Take version number from pkg-config
++set(OPENEXR_VERSION ${_OPENEXR_VERSION})
+ 
+ # List of likely places to find the libraries -- note priority override of
+ # ${OPENEXR_ROOT_DIR}/lib.
