@@ -8,15 +8,13 @@ inherit eutils pax-utils
 DESCRIPTION="Multiplatform Visual Studio Code from Microsoft"
 HOMEPAGE="https://code.visualstudio.com"
 BASE_URI="https://vscode-update.azurewebsites.net/${PV}"
-SRC_URI="
-	x86? ( ${BASE_URI}/linux-ia32/stable ->  ${P}-ia32.tar.gz )
-	amd64? ( ${BASE_URI}/linux-x64/stable -> ${P}-amd64.tar.gz )
+SRC_URI="${BASE_URI}/linux-x64/stable -> ${P}-amd64.tar.gz
 	"
 RESTRICT="mirror strip"
 
 LICENSE="EULA MIT"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="~amd64"
 IUSE="libsecret"
 
 DEPEND="
@@ -38,9 +36,7 @@ RDEPEND="
 QA_PRESTRIPPED="opt/${PN}/code"
 QA_PREBUILT="opt/${PN}/code"
 
-pkg_setup() {
-  use amd64 && S="${WORKDIR}/VSCode-linux-x64" || S="${WORKDIR}/VSCode-linux-ia32"
-}
+S="${WORKDIR}/VSCode-linux-x64"
 
 src_install(){
 	pax-mark m code
@@ -54,7 +50,7 @@ src_install(){
 	fperms +x "/opt/${PN}/libnode.so"
 	fperms +x "/opt/${PN}/resources/app/node_modules.asar.unpacked/vscode-ripgrep/bin/rg"
 	insinto "/usr/share/licenses/${PN}"
-	newins "resources/app/LICENSE.txt" "LICENSE"
+	newins "resources/app/LICENSE.rtf" "LICENSE.rtf"
 }
 
 pkg_postinst(){
