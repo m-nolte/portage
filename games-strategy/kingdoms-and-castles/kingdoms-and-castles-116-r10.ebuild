@@ -7,7 +7,7 @@ inherit desktop eutils unpacker
 
 DESCRIPTION="Kingdoms and Castles"
 HOMEPAGE="https://kingdomsandcastles.com/"
-SRC_URI="kingdoms_and_castles_115r12_30594.sh"
+SRC_URI="kingdoms_and_castles_116r10_34315.sh"
 
 LICENSE="GOG-EULA"
 SLOT="0"
